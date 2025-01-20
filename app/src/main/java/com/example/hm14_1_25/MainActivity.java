@@ -1,52 +1,38 @@
-package com.example.hm14_1_25;
+package com.example.myapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.hm14_1_25.R;
 
 public class MainActivity extends AppCompatActivity {
-    private int count = 0;
-    Button click, next;
-    TextView text;
+
+    private static final String TAG = "MainActivity";
+    private long startTime;
+    private long totalTime = 0;
+    private TextView timeTextView;
+    private Button resetButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("MainActivity","OnCreate");
-        Log.i("MainActivity","just to change colours");
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        click = findViewById(R.id.button);
-        next = findViewById(R.id.button2);
-        text = findViewById(R.id.textView);
 
-        click.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                count++;
-                text.setText(String.valueOf(count));
-            }
-        });
+        Log.d(TAG, "onCreate called");
 
-        next.setOnClickListener(new View.OnClickListener() {
+        timeTextView = findViewById(R.id.timeTextView);
+        resetButton = findViewById(R.id.resetButton);
+        updateTextView();
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, MainActivity2.class);
-                startActivity(i);
+            public void onClick(View v) {
+                totalTime = 0;
+                updateTextView();
             }
         });
     }
@@ -54,36 +40,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("MainActivity","OnStart");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("MainActivity","OnStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("MainActivity","OnDestroy");
+        Log.d(TAG, "onStart called");
+        startTime = System.currentTimeMillis();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("MainActivity","OnResume");
+        Log.d(TAG, "onResume called");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("MainActivity","OnPause");
+        Log.d(TAG, "onPause called");
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("MainActivity","OnRestart");
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop called");
+
+        long endTime = System.currentTimeMillis();
+        totalTime += (endTime - startTime);
+        updateTextView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy called");
+    }
+
+    private void updateTextView() {
+        int seconds = (int) (totalTime / 1000);
+        timeTextView.setText("Total time: " + seconds + " seconds");
     }
 }
