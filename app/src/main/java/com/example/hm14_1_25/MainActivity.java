@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.hm14_1_25;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -7,13 +7,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hm14_1_25.R;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private long startTime;
-    private long totalTime = 0;
+    private long totalTime = 0; // Total visible time in milliseconds
     private TextView timeTextView;
     private Button resetButton;
 
@@ -24,10 +22,14 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate called");
 
+        // Initialize the TextView and Button
         timeTextView = findViewById(R.id.timeTextView);
         resetButton = findViewById(R.id.resetButton);
+
+        // Set the initial text
         updateTextView();
 
+        // Set OnClickListener for the reset button
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         Log.d(TAG, "onStop called");
 
+        // Calculate visible time and add to totalTime
         long endTime = System.currentTimeMillis();
         totalTime += (endTime - startTime);
         updateTextView();
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy called");
     }
 
+    // Update the TextView with the current total visible time in seconds
     private void updateTextView() {
         int seconds = (int) (totalTime / 1000);
         timeTextView.setText("Total time: " + seconds + " seconds");
